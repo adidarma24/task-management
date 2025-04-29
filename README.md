@@ -82,7 +82,7 @@ Login menggunakan admin default:
 - **Email:** [admin@gmail.com]
 - **Password:** 123456
 
-Login menggunakan admin default:
+Login menggunakan user default:
 
 - **Email:** [sasa@gmail.com]
 - **Password:** 123456
