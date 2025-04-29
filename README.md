@@ -1,61 +1,223 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📄 Dokumentasi Teknis - Sistem Task Management
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+## 1. Pendahuluan
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Sistem ini dibuat untuk mempermudah manajemen tugas di lingkungan internal perusahaan. Sistem mendukung:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Manajemen Proyek dan Tugas.
+- Pelaporan progres tugas.
+- Role-Based Access Control menggunakan **Filament Shield**.
+- Sistem berbasis web, menggunakan **Laravel 11** dan **Filament Admin Panel**.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 2. Spesifikasi Teknologi
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Komponen           | Teknologi       |
+| ------------------ | --------------- |
+| Backend            | Laravel 11      |
+| Admin Panel        | Filament PHP    |
+| Database           | MySQL 8+        |
+| Role Management    | Filament Shield |
+| Webserver          | Apache / Nginx  |
+| Bahasa Pemrograman | PHP 8.2+        |
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 3. Panduan Instalasi dan Setup Lokal
 
-## Laravel Sponsors
+### 3.1. Clone Repository
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+git clone https://github.com/nama-repo/task-management.git
+cd task-management
+```
 
-### Premium Partners
+### 3.2. Instalasi Dependency
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+composer install
+npm install && npm run build
+```
 
-## Contributing
+### 3.3. Setup Environment
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Copy file `.env.example` ke `.env`
 
-## Code of Conduct
+```bash
+cp .env.example .env
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Kemudian ubah konfigurasi database sesuai lokal:
 
-## Security Vulnerabilities
+```dotenv
+DB_DATABASE=task_management
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 3.4. Generate Key dan Migrate Database
 
-## License
+```bash
+php artisan key:generate
+php artisan migrate --seed
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 3.5. Jalankan Server Lokal
+
+```bash
+php artisan serve
+```
+
+Akses Admin Panel:
+
+```
+http://localhost:8000/admin
+```
+
+Login menggunakan admin default:
+
+- **Email:** [admin@gmail.com]
+- **Password:** 123456
+
+Login menggunakan admin default:
+
+- **Email:** [sasa@gmail.com]
+- **Password:** 123456
+
+(atau buat user baru via command `php artisan make:filament-user`)
+
+---
+
+## 4. Struktur Database (ERD)
+
+**Entity Relationship Diagram (ERD):**
+
+```
+[users]
+- id (PK)
+- name
+- email
+- password
+- ...
+
+[projects]
+- id (PK)
+- name
+- description
+- created_at
+- updated_at
+
+[tasks]
+- id (PK)
+- project_id (FK)
+- user_id (FK)
+- title
+- description
+- status (enum: 'To Do', 'In Progress', 'Done')
+- deadline
+- created_at
+- updated_at
+```
+
+**Relasi:**
+
+- 1 **Project** → banyak **Task**
+- 1 **User** → banyak **Task**
+
+---
+
+## 5. Alur Proses Sistem (Flowchart)
+
+```mermaid
+flowchart TD
+    A[User Login] --> B{Dashboard}
+    B --> C[Kelola Proyek]
+    B --> D[Kelola Tugas]
+    D --> E[Update Status Tugas]
+    B --> F[Lihat Laporan Progres]
+    F --> G[Laporan berdasarkan User/Proyek]
+```
+
+**Penjelasan:**
+
+- User login ke sistem.
+- User dapat membuat proyek dan tugas.
+- Tugas dapat diubah statusnya (`To Do`, `In Progress`, `Done`).
+- User dapat melihat laporan progres per user atau proyek.
+
+---
+
+## 6. Fitur Utama
+
+### 6.1. Manajemen Proyek
+
+- CRUD (Create, Read, Update, Delete) proyek.
+- Setiap proyek bisa memiliki banyak tugas.
+
+### 6.2. Manajemen Tugas
+
+- Setiap tugas memiliki:
+  - Nama tugas
+  - Deskripsi
+  - Deadline
+  - Status (`To Do`, `In Progress`, `Done`)
+  - Assigned user
+- Filter tugas berdasarkan status atau user.
+
+### 6.3. Pelaporan
+
+- Menampilkan jumlah tugas berdasarkan status:
+  - Per proyek
+  - Per user
+- Visualisasi dalam bentuk tabel dan summary card.
+
+### 6.4. Hak Akses Pengguna
+
+- **Admin**:
+  - Akses penuh ke semua data.
+- **Staff**:
+  - Hanya dapat melihat/mengelola tugas yang ditugaskan ke dirinya.
+
+Role Management menggunakan plugin **Filament Shield**.
+
+---
+
+## 7. Hak Akses dan Role (RBAC)
+
+| Role  | Akses                                                 |
+| ----- | ----------------------------------------------------- |
+| Admin | Semua fitur: Project, Task, User Management, Laporan  |
+| Staff | Hanya Task Management: lihat dan update tugas sendiri |
+
+Manajemen perizinan dilakukan melalui Filament Shield dan bisa diatur granular per Resource.
+
+---
+
+## 8. Testing
+
+- Pengujian dilakukan dengan akun **Admin** dan **Staff**.
+- Test Case mencakup:
+  - Login / Logout
+  - Create / Edit / Delete Project
+  - Create / Edit / Delete Task
+  - Ubah status tugas
+  - Lihat laporan
+  - Cek pembatasan akses berdasarkan role
+
+---
+
+## 9. Deployment Notes
+
+- Gunakan VPS/Hosting dengan support PHP 8.2+ dan MySQL 8+.
+- Pastikan folder `storage/` dan `bootstrap/cache/` memiliki permission write.
+- Set `.env` sesuai environment production (termasuk setting mail jika perlu notifikasi email).
+
+---
+
+# 📓 Penutup
+
+Sistem ini dikembangkan dengan fokus pada kesederhanaan, skalabilitas, dan kemudahan penggunaan.
+Dengan menggunakan **Filament Admin** dan **Filament Shield**, pengelolaan backend menjadi lebih cepat dan aman.
